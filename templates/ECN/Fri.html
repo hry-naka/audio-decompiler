@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NHK中国語講座 | 週末総復習ゼミ</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --text-muted: #aaaaaa;
+            --primary-blue: #0091ea;
+            --accent-purple: #9c27b0;
+            --accent-gold: #ffd700;
+            --error-red: #ff5252;
+            --accent-green: #00c853;
+            --border-color: #333333;
+            --card-bg: #252525;
+        }
+        body {
+            font-family: 'Segoe UI', 'Noto Sans JP', 'PingFang SC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--container-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            box-sizing: border-box;
+        }
+        header {
+            border-bottom: 2px solid var(--accent-purple);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .lesson-meta {
+            font-size: 0.95em;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+        h1 {
+            color: var(--accent-purple);
+            margin: 10px 0 0 0;
+            font-size: 2em;
+        }
+        h2 {
+            color: var(--primary-blue);
+            font-size: 1.5em;
+            border-left: 5px solid var(--primary-blue);
+            padding-left: 12px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        .intro-box {
+            background-color: rgba(156, 39, 176, 0.1);
+            border: 1px dashed var(--accent-purple);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+        .drill-container {
+            margin-bottom: 25px;
+        }
+        .drill-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .drill-number {
+            background-color: var(--primary-blue);
+            color: #fff;
+            font-weight: bold;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .drill-question {
+            font-size: 1.15em;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0 0 15px 0;
+        }
+        details {
+            background-color: #1a1a1a;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 15px;
+            margin-top: 10px;
+        }
+        summary {
+            font-weight: bold;
+            color: var(--accent-gold);
+            cursor: pointer;
+            outline: none;
+            user-select: none;
+        }
+        .answer-content {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+        }
+        .cn-text {
+            font-size: 1.3em;
+            font-weight: 500;
+            color: var(--accent-green);
+            margin: 0 0 5px 0;
+        }
+        .pinyin-text {
+            font-size: 1.05em;
+            color: var(--text-muted);
+            margin: 0 0 10px 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .explanation-text {
+            font-size: 0.95em;
+            color: var(--text-color);
+            margin: 5px 0 0 0;
+            background-color: rgba(255, 255, 255, 0.03);
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .review-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .review-table th, .review-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .review-table th {
+            background-color: rgba(0, 145, 234, 0.15);
+            color: var(--primary-blue);
+            font-weight: bold;
+        }
+        .proverb-cn {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.85em;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="lesson-meta">{{ program_id }} | {{ broadcast_date }}</div>
+            <h1 id="render-title">読み込み中...</h1>
+        </header>
+
+        <div class="intro-box">
+            📝 <strong>今週の総復習セクション</strong><br>
+            月曜日から木曜日までに学んだ重要文法、重要フレーズが頭に定着しているかテストで確認しましょう。まずは答えを見ずに、声に出して答えてみてください。
+        </div>
+
+        <h2>✍️ 今週の力試しテスト (Weekly Drill)</h2>
+        <div class="drill-container" id="render-drills"></div>
+
+        <h2>📚 今週の教訓・重要表現まとめ (Weekly Summary)</h2>
+        <table class="review-table">
+            <thead>
+                <tr>
+                    <th style="width: 20%;">対象課</th>
+                    <th style="width: 30%;">重要表現 / 四字熟語</th>
+                    <th style="width: 50%;">日本語訳と教訓のポイント</th>
+                </tr>
+            </thead>
+            <tbody id="render-reviews"></tbody>
+        </table>
+
+        <footer>
+            <p>Generated via Agnostic Client-Side Review Engine</p>
+        </footer>
+    </div>
+
+<!-- DATA_INJECTION_MARKER -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const dataSource = document.getElementById("lesson-data");
+            if (!dataSource) {
+                document.getElementById("render-title").textContent = "データソースが見つかりません (No Injection)";
+                return;
+            }
+            try {
+                const data = JSON.parse(dataSource.textContent);
+                document.getElementById("render-title").textContent = data.lesson_title || "週末総復習ゼミ";
+
+                const drillContainer = document.getElementById("render-drills");
+                if (data.weekly_drills) {
+                    drillContainer.innerHTML = data.weekly_drills.map((drill, idx) => `
+                    <div class="drill-card">
+                        <div class="drill-number">第 ${idx + 1} 問</div>
+                        <p class="drill-question">${drill.question || ''}</p>
+                        <details>
+                            <summary>💡 正解と解説を確認する</summary>
+                            <div class="answer-content">
+                                <p class="cn-text">${drill.correct_chinese || ''}</p>
+                                <p class="pinyin-text">${drill.correct_pinyin || ''}</p>
+                                <div class="explanation-text">
+                                    <strong>解説：</strong>${drill.explanation || ''}
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                `).join('');
+                }
+
+                const reviewContainer = document.getElementById("render-reviews");
+                if (data.weekly_reviews) {
+                    reviewContainer.innerHTML = data.weekly_reviews.map(rev => `
+                    <tr>
+                        <td><strong>${rev.lesson_scope || ''}</strong></td>
+                        <td>
+                            <div class="proverb-cn">${rev.chinese || ''}</div>
+                            <div class="pinyin-text" style="margin: 0; font-size: 0.9em;">${rev.pinyin || ''}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: bold; color: var(--accent-gold); margin-bottom: 4px;">${rev.japanese_meaning || ''}</div>
+                            <div style="font-size: 0.9em; color: var(--text-muted);">${rev.lesson_point || ''}</div>
+                        </td>
+                    </tr>
+                `).join('');
+                }
+            } catch (e) {
+                console.error("Error decoding:", e);
+                document.getElementById("render-title").textContent = "JSONパースエラーが発生しました";
+            }
+        });
+    </script>
+</body>
+</html>

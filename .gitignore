@@ -131,7 +131,10 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .DS_Store
-dataset/
 
-# 中間抽出データ
+# audio-decompiler specific
+dataset/
+output/
+tmp/
 features_labels.joblib
+

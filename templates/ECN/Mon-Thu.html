@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NHK中国語講座 | 学習ダッシュボード</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --text-muted: #aaaaaa;
+            --primary-blue: #0091ea;
+            --accent-green: #00c853;
+            --error-red: #ff5252;
+            --border-color: #333333;
+            --card-bg: #252525;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Noto Sans JP', 'PingFang SC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--container-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            box-sizing: border-box;
+        }
+
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: var(--primary-blue);
+            margin: 0 0 5px 0;
+            font-size: 1.8em;
+        }
+
+        .date-badge {
+            background-color: #333;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--text-muted);
+        }
+
+        .section-block {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            color: var(--primary-blue);
+            border-left: 4px solid var(--primary-blue);
+            padding-left: 10px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .section-title.quiz-title {
+            color: #ffb300;
+            border-left-color: #ffb300;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+        }
+
+        .cn-text {
+            font-size: 1.4em;
+            color: #fff;
+            font-weight: 500;
+            margin: 5px 0;
+        }
+
+        .pinyin-text {
+            color: #ffb300;
+            font-family: 'Lucida Sans', sans-serif;
+            margin: 2px 0 5px 0;
+            font-size: 1.05em;
+        }
+
+        .jp-text {
+            color: var(--text-color);
+            margin: 5px 0;
+        }
+
+        .dialogue-box {
+            background-color: #1a1a1a;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin: 8px 0;
+        }
+
+        .dialogue-line {
+            margin-bottom: 10px;
+        }
+
+        .dialogue-line:last-child {
+            margin-bottom: 0;
+        }
+
+        .speaker-label {
+            font-size: 0.85em;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-right: 5px;
+        }
+
+        .speaker-label.q {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .speaker-label.a {
+            background-color: #5c2626;
+            color: #ff8a8a;
+        }
+
+        .speaker-label.ok {
+            background-color: #265c32;
+            color: #8aff8a;
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        @media(max-width: 768px) {
+            .compare-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .compare-card {
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .compare-card.wrong {
+            background-color: #2c1a1a;
+            border-color: #5c2626;
+        }
+
+        .compare-card.correct {
+            background-color: #1a2c1e;
+            border-color: #265c32;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .badge.wrong {
+            background-color: var(--error-red);
+            color: white;
+        }
+
+        .badge.correct {
+            background-color: var(--accent-green);
+            color: white;
+        }
+
+        .drill-answer-zone {
+            background-color: #1a1a1a;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border: 1px dashed #444;
+        }
+
+        .reveal-btn {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .reveal-btn:hover {
+            background-color: #444;
+        }
+
+        .drill-content {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .drill-content.show {
+            display: block;
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-question {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .choice-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background-color: #2d2d2d;
+            color: var(--text-color);
+            border: 1px solid #444;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .choice-btn:hover {
+            background-color: #3d3d3d;
+        }
+
+        .choice-btn.selected-correct {
+            background-color: #1a4d24 !important;
+            border-color: var(--accent-green) !important;
+            color: #fff;
+        }
+
+        .choice-btn.selected-wrong {
+            background-color: #4d1a1a !important;
+            border-color: var(--error-red) !important;
+            color: #fff;
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            display: none;
+            font-size: 0.95em;
+        }
+
+        .quiz-feedback.show-correct {
+            display: block;
+            background-color: #1a2c1e;
+            border: 1px solid #265c32;
+        }
+
+        .quiz-feedback.show-wrong {
+            display: block;
+            background-color: #2c1a1a;
+            border: 1px solid #5c2626;
+        }
+
+        .formula-box {
+            background-color: #142534;
+            border: 1px solid #1f4262;
+            padding: 10px 15px;
+            border-radius: 6px;
+            color: #64b5f6;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>{{ program_id }} 学習ダッシュボード</h1>
+            <span class="date-badge">放送日: {{ broadcast_date }}</span>
+        </header>
+
+        <div class="section-block">
+            <div class="section-title">前回の「〆のひとこと」復習</div>
+            <div class="card" id="previous-closing-box">読み込み中...</div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-title">今日の学習テーマ</div>
+            <div class="card" style="border-left: 5px solid var(--primary-blue);">
+                <h2 id="theme-title" style="margin: 0; font-size: 1.4em;">読み込み中...</h2>
+            </div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-title">今日のあるあるミス</div>
+            <div id="common-mistake-box">読み込み中...</div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-title">ざっくり解説</div>
+            <div class="card" id="rough-explanation-box"
+                style="font-weight: 500; font-size: 1.1em; background-color: #1b2631;">読み込み中...</div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-title">くわしく解説</div>
+            <div id="detailed-explanation-box">読み込み中...</div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-title">なるほどテクニック</div>
+            <div class="card" id="naruhodo-technique-box">読み込み中...</div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-title">実践ドリル（セルフチェック機能）</div>
+            <div id="practice-drill-box">読み込み中...</div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-title">〆のひとこと（※解説は次回のお楽しみ）</div>
+            <div class="card" id="closing-remark-box"
+                style="font-size: 1.35em; color: #fff; font-weight: bold; border-left: 5px solid #ffb300; background-color: #2c251a;">
+                読み込み中...</div>
+        </div>
+
+        <div class="section-block">
+            <div class="section-title quiz-title">★小テスト</div>
+            <div id="quiz-container">読み込み中...</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            try {
+                const dataEl = document.getElementById("lesson-data");
+                if (!dataEl) return;
+                const data = JSON.parse(dataEl.textContent);
+
+                // 1. 前回の〆のひとこと
+                const pcr = data.previous_closing_remark;
+                if (pcr && typeof pcr === 'object' && pcr.chinese) {
+                    document.getElementById("previous-closing-box").innerHTML = `
+                    <p class="cn-text">${pcr.chinese}</p>
+                    <p class="pinyin-text">${pcr.pinyin || ''}</p>
+                    <p class="jp-text" style="border-top: 1px solid var(--border-color); padding-top: 8px; margin-top: 8px; color: var(--text-muted);">💡 解説: ${pcr.explanation || ''}</p>
+                `;
+                } else {
+                    document.getElementById("previous-closing-box").textContent = "言及なし、または抽出データがありません。";
+                }
+
+                // 2. テーマ
+                document.getElementById("theme-title").textContent = data.theme || "無題のテーマ";
+
+                // 3. 今日のあるあるミス (会話構造化対応)
+                const cm = data.common_mistake;
+                if (cm && cm.wrong_dialogue && cm.correct_dialogue) {
+                    const w = cm.wrong_dialogue;
+                    const c = cm.correct_dialogue;
+                    document.getElementById("common-mistake-box").innerHTML = `
+                    <div class="card">
+                        <p style="margin-top:0; font-weight: bold; color: var(--text-muted);">🎬 状況設定: ${cm.context || '会話シーン'}</p>
+                        <div class="compare-grid">
+                            <div class="compare-card wrong">
+                                <span class="badge wrong">❌ ついついやっちゃう例</span>
+                                <div class="dialogue-box">
+                                    <div class="dialogue-line"><span class="speaker-label q">質問</span><span class="cn-text" style="font-size:1.15em;">${w.q_chinese}</span><div class="pinyin-text" style="font-size:0.9em; margin:0;">${w.q_pinyin}</div><div class="jp-text" style="font-size:0.9em; color:var(--text-muted);">${w.q_japanese}</div></div>
+                                    <div class="dialogue-line" style="margin-top:10px;"><span class="speaker-label a">ミス</span><span class="cn-text" style="font-size:1.15em; color:#ff8a8a;">${w.a_chinese}</span><div class="pinyin-text" style="font-size:0.9em; margin:0;">${w.a_pinyin}</div><div class="jp-text" style="font-size:0.9em; color:var(--text-muted);">${w.a_japanese}</div></div>
+                                </div>
+                            </div>
+                            <div class="compare-card correct">
+                                <span class="badge correct">⭕️ 正しい表現</span>
+                                <div class="dialogue-box">
+                                    <div class="dialogue-line"><span class="speaker-label q">質問</span><span class="cn-text" style="font-size:1.15em;">${c.q_chinese}</span><div class="pinyin-text" style="font-size:0.9em; margin:0;">${c.q_pinyin}</div><div class="jp-text" style="font-size:0.9em; color:var(--text-muted);">${c.q_japanese}</div></div>
+                                    <div class="dialogue-line" style="margin-top:10px;"><span class="speaker-label ok">正解</span><span class="cn-text" style="font-size:1.15em; color:#8aff8a;">${c.a_chinese}</span><div class="pinyin-text" style="font-size:0.9em; margin:0;">${c.a_pinyin}</div><div class="jp-text" style="font-size:0.9em; color:var(--text-muted);">${c.a_japanese}</div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="margin: 15px 0 0 0; font-size:0.95em; line-height:1.6; border-top: 1px solid var(--border-color); padding-top:10px;">💡 <strong>解説:</strong> ${cm.explanation || ''}</p>
+                    </div>
+                `;
+                } else {
+                    document.getElementById("common-mistake-box").innerHTML = '<div class="card">特記事項なし</div>';
+                }
+
+                // 4. ざっくり解説
+                document.getElementById("rough-explanation-box").textContent = data.rough_explanation || "情報がありません。";
+
+                // 5. くわしく解説
+                const de = data.detailed_explanation;
+                if (de) {
+                    let pointsHtml = '';
+                    if (de.points && Array.isArray(de.points)) {
+                        pointsHtml = de.points.map(pt => `
+                        <div style="margin-top: 12px; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                            <strong style="color: var(--primary-blue); display:block; margin-bottom:4px; font-size: 1.1em;">■ ${pt.sub_title}</strong>
+                            <p style="margin-top:0; color:#e0e0e0; white-space: pre-wrap;">${pt.description}</p>
+                        </div>
+                    `).join('');
+                    }
+                    document.getElementById("detailed-explanation-box").innerHTML = `
+                    <div class="card">
+                        ${de.formula ? `<div class="formula-box">🔑 基本公式: ${de.formula}</div>` : ''}
+                        ${pointsHtml}
+                    </div>
+                `;
+                }
+
+                // 6. なるほどテクニック
+                document.getElementById("naruhodo-technique-box").style.whiteSpace = "pre-wrap";
+                document.getElementById("naruhodo-technique-box").textContent = data.naruhodo_technique || "情報がありません。";
+
+                // 7. 実践ドリル (日本語ファースト・隠し答えアコーディオン)
+                const drills = data.practice_drill;
+                if (drills && Array.isArray(drills)) {
+                    document.getElementById("practice-drill-box").innerHTML = drills.map((dr, idx) => `
+                    <div class="card">
+                        <span class="date-badge" style="background-color:#142534; color:#64b5f6;">問題 ${idx + 1}</span>
+                        <p class="jp-text" style="font-size: 1.2em; font-weight: bold; margin: 10px 0; color: #fff;">お題: ${dr.japanese || ''}</p>
+                        <div class="drill-answer-zone">
+                            <button class="reveal-btn" onclick="toggleDrill(${idx})">👁 中国語の解答・ピンインを表示</button>
+                            <div class="drill-content" id="drill-content-${idx}">
+                                <p class="cn-text">${dr.chinese || ''}</p>
+                                <p class="pinyin-text">${dr.pinyin || ''}</p>
+                                ${dr.focus ? `<p style="margin: 8px 0 0 0; font-size:0.9em; color:var(--text-muted); border-top: 1px dashed #333; padding-top: 5px;">💡 ポイント: ${dr.focus}</p>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                }
+
+                // 8. 〆のひとこと
+                document.getElementById("closing-remark-box").textContent = data.closing_remark || "情報がありません。";
+
+                // 9. ★小テスト
+                const quizzes = data.quiz;
+                if (quizzes && Array.isArray(quizzes)) {
+                    document.getElementById("quiz-container").innerHTML = quizzes.map((q, qIdx) => `
+                    <div class="quiz-card" id="quiz-card-${qIdx}">
+                        <div class="quiz-question">Q${qIdx + 1}. ${q.question}</div>
+                        <div class="choices-box">
+                            ${q.choices.map((choice, cIdx) => `
+                                <button class="choice-btn" onclick="checkQuizAnswer(${qIdx}, ${cIdx}, ${q.answer_index})">
+                                    ${choice}
+                                </button>
+                            `).join('')}
+                        </div>
+                        <div class="quiz-feedback" id="feedback-${qIdx}">
+                            <strong id="feedback-result-${qIdx}"></strong><br>
+                            <span style="display:inline-block; margin-top:5px;">${q.explanation || ''}</span>
+                        </div>
+                    </div>
+                `).join('');
+                }
+
+            } catch (e) {
+                console.error("Error rendering layout elements:", e);
+            }
+        });
+
+        window.toggleDrill = function (idx) {
+            const content = document.getElementById(`drill-content-${idx}`);
+            content.classList.toggle('show');
+        };
+
+        window.checkQuizAnswer = function (quizIdx, selectedIdx, correctIdx) {
+            const card = document.getElementById(`quiz-card-${quizIdx}`);
+            const feedback = document.getElementById(`feedback-${quizIdx}`);
+            const resultText = document.getElementById(`feedback-result-${quizIdx}`);
+            const buttons = card.querySelectorAll('.choice-btn');
+            buttons.forEach(btn => btn.disabled = true);
+            if (selectedIdx === correctIdx) {
+                buttons[selectedIdx].classList.add('selected-correct');
+                feedback.className = "quiz-feedback show-correct";
+                resultText.innerHTML = "⭕️ 正解です！";
+            } else {
+                buttons[selectedIdx].classList.add('selected-wrong');
+                buttons[correctIdx].classList.add('selected-correct');
+                feedback.className = "quiz-feedback show-wrong";
+                resultText.innerHTML = "❌ 不正解です...";
+            }
+        }
+    </script>
+</body>
+
+</html>
